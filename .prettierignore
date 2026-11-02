@@ -2,3 +2,7 @@ build/
 dist/
 node_modules/
 package-lock.json
+
+# Generated: built skill and rendered example
+.claude/
+examples/*.html
