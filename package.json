@@ -1,0 +1,86 @@
+{
+  "name": "sketchy",
+  "private": true,
+  "version": "0.1.6",
+  "description": "Lets Claude draw while it explains: hand-drawn, interactive diagrams, circuits and labeled photos, right in the Claude chat and in Claude Code.",
+  "type": "module",
+  "license": "MIT",
+  "author": "ddkbs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ddkbs/sketchy.git"
+  },
+  "homepage": "https://github.com/ddkbs/sketchy#readme",
+  "bugs": {
+    "url": "https://github.com/ddkbs/sketchy/issues"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "mcp-apps",
+    "claude",
+    "diagram",
+    "visualization",
+    "arduino",
+    "svg"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "npm run build:parts && npm run build:server && npm run build:viewer",
+    "build:parts": "node scripts/extract-parts.mjs",
+    "build:server": "tsc",
+    "build:viewer": "tsc -p viewer/tsconfig.json && vite build",
+    "build:skill": "node scripts/build-skill.mjs",
+    "build:web": "vite build -c web/vite.config.ts",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit && tsc -p viewer/tsconfig.json && tsc -p skill/tsconfig.json && tsc -p web/tsconfig.json",
+    "preview": "tsx scripts/preview-data.ts && vite",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "pack": "node scripts/pack.mjs"
+  },
+  "devDependencies": {
+    "@anthropic-ai/mcpb": "^2.1.2",
+    "@fontsource/caveat": "^5.3.0",
+    "@fontsource/kalam": "^5.3.0",
+    "@happy-dom/global-registrator": "^21.0.4",
+    "@types/node": "^26.6.4",
+    "@types/sql.js": "^1.4.11",
+    "@wokwi/elements": "^1.9.2",
+    "happy-dom": "^21.0.4",
+    "prettier": "^3.9.9",
+    "roughjs": "^4.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vite-plugin-singlefile": "^2.3.4",
+    "vitest": "^5.0.5"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^4.3.2",
+    "@iconify-json/lucide": "^1.2.149",
+    "@iconify-json/simple-icons": "^1.2.101",
+    "@modelcontextprotocol/ext-apps": "^1.7.5",
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "elkjs": "^0.12.1",
+    "sharp": "^0.35.5",
+    "sql.js": "^1.15.2",
+    "zod": "^4.6.5"
+  },
+  "bin": {
+    "sketchy": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "build/parts.json",
+    "build/viewer.html",
+    "LICENSE",
+    "README.md",
+    "assets/icon.png",
+    "THIRD_PARTY_NOTICES.md"
+  ]
+}

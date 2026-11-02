@@ -1,0 +1,36 @@
+title Bull put spread: placing it, the stop, and the three endings
+subtitle Example - SPY at 605, sell 600P / buy 595P, 30 DTE, 1.50 credit
+dir down
+group place Placing the trade
+group out Possible endings
+
+acct Account @wallet ~ Needs about 350 per spread in buying-power reserve (width 5.00 minus 1.50 credit, x100)
+sell Sell 600 put (rounded) in place !accent ~ Short leg collects premium of about 2.80
+buy Buy 595 put (rounded) in place ~ Long leg caps risk; costs about 1.30
+credit Net credit 1.50 (note) in place ~ 150 per spread received up front. This is also your max profit
+stop Stop order (rounded) in place !accent ~ Example rule - exit if spread value reaches 3.00 (2x the credit). Loss is about 150
+watch Wait and watch (person) in place ~ Time decay works in your favor while SPY stays above 600
+
+hit Stop hit (rounded) in out !accent ~ Buy back spread at 3.00, pay 300 vs 150 collected. Net loss about 150
+otm Expires OTM (rounded) in out ~ SPY above 600 at expiry. Both puts expire worthless. Keep the full 150
+itm Expires ITM (rounded) in out !muted ~ SPY below 595 at expiry without a stop. Short put assigned, long put exercised. Max loss 350
+
+acct -> sell Sell to open
+acct -> buy Buy to open
+sell -> credit
+buy -> credit
+credit -> stop Place GTC stop
+stop -> watch
+watch --> hit SPY drops, stop triggers !accent
+watch --> otm SPY holds above 600
+watch --> itm SPY gaps through, no stop fill !muted
+
+step Pick the vertical: Bull put spread means bullish to neutral. Same expiry, same type, two strikes 5 wide. | acct
+step Sell the higher strike: Sell the 600 put. This leg brings in the premium and carries the risk. | acct sell acct->sell
+step Buy the lower strike: Buy the 595 put as insurance. It is cheaper, and it caps the loss at the width. | buy acct->buy
+step Net credit: Premium collected minus premium paid is 1.50. That is 150 in your pocket and your best case. | credit sell->credit buy->credit
+step Add the stop: Brokers cannot attach a native stop to a spread order, so you place a conditional order that buys the spread back at 3.00. Risk becomes about 150, not 350. | stop credit->stop
+step Wait: Each day theta shrinks the spread value toward zero if SPY stays put. | watch stop->watch
+step Ending A, stop hit: SPY falls, spread value hits 3.00, the stop closes both legs. Loss of about 150. | hit watch->hit
+step Ending B, expires OTM: SPY closes above 600. Both puts expire worthless and you keep all 150. | otm watch->otm
+step Ending C, expires ITM: SPY closes below 595 with no stop. Max loss 350 because the long put offsets the short. Close before expiry to avoid assignment. | itm watch->itm

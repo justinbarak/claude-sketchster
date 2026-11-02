@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  bundle:
+    strategy:
+      matrix:
+        include:
+          - os: macos-15
+          - os: ubuntu-latest
+          - os: windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      - run: npm run pack
+      # jsDelivr serves the cdn branch. Publish the bundle first so the skill
+      # can pin the exact commit and an integrity hash of this same file.
+      - if: matrix.os == 'ubuntu-latest'
+        name: Publish the browser bundle and build the pinned skill
+        env:
+          REPO: ${{ github.repository }}
+        run: |
+          npm run build:web
+          version="${GITHUB_REF_NAME#v}"
+          git fetch --depth 1 origin cdn
+          git worktree add ../cdn FETCH_HEAD
+          # Exact-version folders only; nothing is overwritten after release.
+          if [ -e "../cdn/$version" ]; then echo "cdn/$version already exists" >&2; exit 1; fi
+          mkdir -p "../cdn/$version"
+          cp build/web/sketchy.js build/parts.json "../cdn/$version/"
+          (
+            cd ../cdn
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -m "chore(cdn): publish $version"
+            git push origin HEAD:cdn
+          )
+          SKETCHY_REPO="$REPO" SKETCHY_CDN_REF="$(git -C ../cdn rev-parse HEAD)" npm run build:skill
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            *.mcpb
+            sketchy-skill-*.zip
+          draft: true
