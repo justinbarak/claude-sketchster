@@ -1,0 +1,24 @@
+# Dependencies and build output
+node_modules/
+dist/
+build/
+*.mcpb
+sketchy-skill-*.zip
+
+# Logs and local environment
+*.log
+.env
+.env.*
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Local tooling
+#.claude/ (skills tracked below)
+CLAUDE.md
+
+!.claude/
+.claude/*
+!.claude/skills/
