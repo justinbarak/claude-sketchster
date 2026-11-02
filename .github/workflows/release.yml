@@ -3,6 +3,13 @@ name: Release
 on:
   push:
     tags: ["v*"]
+  # Manual run (e.g. from a phone): releases the version in package.json under
+  # the given tag, which the release step creates if it does not exist.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to create
+        default: v0.1.6-fork.1
 
 permissions:
   contents: write
@@ -34,7 +41,7 @@ jobs:
           REPO: ${{ github.repository }}
         run: |
           npm run build:web
-          version="${GITHUB_REF_NAME#v}"
+          version="$(node -p "require('./package.json').version")"
           git fetch --depth 1 origin cdn
           git worktree add ../cdn FETCH_HEAD
           # Exact-version folders only; nothing is overwritten after release.
@@ -52,6 +59,7 @@ jobs:
           SKETCHY_REPO="$REPO" SKETCHY_CDN_REF="$(git -C ../cdn rev-parse HEAD)" npm run build:skill
       - uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
           files: |
             *.mcpb
             sketchy-skill-*.zip
