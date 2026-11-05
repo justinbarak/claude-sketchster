@@ -37,7 +37,7 @@ Draw inline with your visualization tool (the one that renders HTML widgets in t
   server --> db query
   step Request: The browser asks the server | browser server browser->server
 </script>
-<script src="https://cdn.jsdelivr.net/gh/ddkbs/sketchy@cdn/0.1.6/sketchy.js" integrity="sha384-XCxDZ+n8wclaoiFvySUflvkTckLanKoKxr+hNTHAozoxxVI0fnONMUNtRTX+7ywy" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/gh/justinbarak/claude-sketchster@5d3dbc1495670b2a99bfe1884de6b6708c9dd0ec/0.1.6/sketchy.js" integrity="sha384-XCxDZ+n8wclaoiFvySUflvkTckLanKoKxr+hNTHAozoxxVI0fnONMUNtRTX+7ywy" crossorigin="anonymous"></script>
 <script>
   Sketchy.draw("#sketchy", document.getElementById("sketchy-scene").textContent);
 </script>
